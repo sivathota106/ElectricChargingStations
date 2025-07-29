@@ -36,23 +36,42 @@ struct ChargingStationsMapView: View {
             center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
             span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         )),
-        stations: [
-            ChargingStation(
-                id: 1,
-                title: "Test Station 1",
-                address: "123 Main St",
-                latitude: 37.7749,
-                longitude: -122.4194,
-                distance: 0.5
-            ),
-            ChargingStation(
-                id: 2,
-                title: "Test Station 2",
-                address: "456 Oak Ave",
-                latitude: 37.7849,
-                longitude: -122.4094,
-                distance: 1.2
-            )
-        ]
+        stations: createMockStations()
     )
+}
+
+// Helper function to create mock stations for preview
+private func createMockStations() -> [ChargingStation] {
+    let mockJSON = """
+    [
+        {
+            "ID": 1,
+            "AddressInfo": {
+                "Title": "Test Station 1",
+                "AddressLine1": "123 Main St",
+                "Latitude": 37.7749,
+                "Longitude": -122.4194
+            },
+            "Distance": 0.5
+        },
+        {
+            "ID": 2,
+            "AddressInfo": {
+                "Title": "Test Station 2",
+                "AddressLine1": "456 Oak Ave",
+                "Latitude": 37.7849,
+                "Longitude": -122.4094
+            },
+            "Distance": 1.2
+        }
+    ]
+    """.data(using: .utf8)!
+    
+    do {
+        return try JSONDecoder().decode([ChargingStation].self, from: mockJSON)
+    } catch {
+        // Return empty array if decoding fails
+        print("Failed to create mock stations: \(error)")
+        return []
+    }
 } 

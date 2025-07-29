@@ -2,7 +2,7 @@
 //  MBElectricChargingStationsUITestsLaunchTests.swift
 //  MBElectricChargingStationsUITests
 //
-//  Created by Siva Thota Moukthika on 7/27/25.
+//  Created by Siva Thota on 7/27/25.
 //
 
 import XCTest
