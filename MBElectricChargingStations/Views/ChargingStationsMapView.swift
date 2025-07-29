@@ -51,11 +51,11 @@ struct ChargingStationsMapView: View {
 #Preview {
     ChargingStationsMapView(
         region: .constant(MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         )),
         stations: createMockStations(),
-        userLocation: CLLocation(latitude: 37.7749, longitude: -122.4194)
+        userLocation: nil
     )
 }
 
@@ -68,8 +68,8 @@ private func createMockStations() -> [ChargingStation] {
             "AddressInfo": {
                 "Title": "Test Station 1",
                 "AddressLine1": "123 Main St",
-                "Latitude": 37.7749,
-                "Longitude": -122.4194
+                "Latitude": 0.0,
+                "Longitude": 0.0
             },
             "Distance": 0.5
         },
@@ -78,8 +78,8 @@ private func createMockStations() -> [ChargingStation] {
             "AddressInfo": {
                 "Title": "Test Station 2",
                 "AddressLine1": "456 Oak Ave",
-                "Latitude": 37.7849,
-                "Longitude": -122.4094
+                "Latitude": 0.001,
+                "Longitude": 0.001
             },
             "Distance": 1.2
         }

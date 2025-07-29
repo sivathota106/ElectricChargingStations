@@ -13,7 +13,10 @@ struct ContentView: View {
     @StateObject private var viewModel = ChargingStationsViewModel()
     @StateObject private var locationManager = LocationManager()
     @State private var hasFetchedForLocation = false
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+    )
     @State private var locationError: String?
     
     var body: some View {
