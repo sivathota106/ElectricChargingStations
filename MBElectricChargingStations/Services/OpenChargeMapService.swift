@@ -22,21 +22,17 @@ class OpenChargeMapService {
             return
         }
         
-        print("🌐 Fetching from URL: \(url)")
-        
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("❌ Network error: \(error)")
                 completion(.failure(error))
                 return
             }
             
             if let httpResponse = response as? HTTPURLResponse {
-                print("📡 HTTP Status: \(httpResponse.statusCode)")
+                print("HTTP Status: \(httpResponse.statusCode)")
             }
             
             guard let data = data else {
-                print("❌ No data received")
                 completion(.failure(NSError(domain: "No data", code: 0)))
                 return
             }
@@ -48,7 +44,6 @@ class OpenChargeMapService {
                 
                 // Check if it's an error message
                 if responseString.contains("REJECTED") || responseString.contains("ERROR") {
-                    print("❌ API Error: \(responseString)")
                     completion(.failure(NSError(domain: "API Error", code: 0, userInfo: [NSLocalizedDescriptionKey: responseString])))
                     return
                 }
@@ -56,7 +51,6 @@ class OpenChargeMapService {
             
             do {
                 let stations = try JSONDecoder().decode([ChargingStation].self, from: data)
-                print("✅ Successfully decoded \(stations.count) stations")
                 completion(.success(stations))
             } catch {
                 print("❌ JSON Decoding Error: \(error)")

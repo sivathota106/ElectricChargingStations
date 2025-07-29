@@ -4,6 +4,7 @@ import MapKit
 struct ChargingStationsMapView: View {
     @Binding var region: MKCoordinateRegion
     let stations: [ChargingStation]
+    let userLocation: CLLocation?
     
     var body: some View {
         Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: stations) { station in
@@ -27,6 +28,23 @@ struct ChargingStationsMapView: View {
         .frame(height: 250)
         .cornerRadius(12)
         .padding([.top, .horizontal])
+        .onAppear {
+            updateMapRegion()
+        }
+        .onChange(of: userLocation) { _ in
+            updateMapRegion()
+        }
+    }
+    
+    private func updateMapRegion() {
+        guard let userLocation = userLocation else { return }
+        
+        // Update the map region to center on user's location
+        region.center = userLocation.coordinate
+        
+        // Adjust the span to show a reasonable area around the user
+        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        region.span = span
     }
 }
 
@@ -36,7 +54,8 @@ struct ChargingStationsMapView: View {
             center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
             span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         )),
-        stations: createMockStations()
+        stations: createMockStations(),
+        userLocation: CLLocation(latitude: 37.7749, longitude: -122.4194)
     )
 }
 
