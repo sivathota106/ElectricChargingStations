@@ -37,11 +37,8 @@ struct ContentView: View {
                 case .authorizedWhenInUse, .authorizedAlways:
                     if let location = locationManager.location {
                         VStack {
-                            mapView
-                                .frame(height: 250)
-                                .cornerRadius(12)
-                                .padding([.top, .horizontal])
-                            stationListView
+                            ChargingStationsMapView(region: $region, stations: viewModel.stations)
+                            ChargingStationsListView(viewModel: viewModel)
                         }
                         .onAppear {
                             if !hasFetchedForLocation {
@@ -66,66 +63,6 @@ struct ContentView: View {
             hasFetchedForLocation = false
             if let loc = newLocation {
                 region.center = loc.coordinate
-            }
-        }
-    }
-    
-    private var mapView: some View {
-        Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: viewModel.stations) { station in
-            MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: station.latitude, longitude: station.longitude)) {
-                VStack {
-                    Image(systemName: "bolt.car")
-                        .foregroundColor(.green)
-                        .padding(6)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                    Text(station.title)
-                        .font(.caption2)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: 80)
-                }
-            }
-        }
-    }
-    
-    private var stationListView: some View {
-        Group {
-            if viewModel.isLoading {
-                ProgressView("Loading stations...")
-            } else if let error = viewModel.errorMessage {
-                VStack {
-                    Text("Error: \(error)")
-                        .foregroundColor(.red)
-                    Button("Retry") {
-                        if let location = locationManager.location {
-                            viewModel.fetchStations(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-                        }
-                    }
-                }
-            } else {
-                List(viewModel.stations) { station in
-                    NavigationLink(destination: StationDetailView(station: station)) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Image(systemName: "bolt.car")
-                                    .foregroundColor(.green)
-                                Text(station.title)
-                                    .font(.headline)
-                                Spacer()
-                                if let distance = station.distance {
-                                    Text(String(format: "%.1f km", distance))
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            Text(station.address)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .lineLimit(2)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
             }
         }
     }
